@@ -5,7 +5,6 @@ import {FuseAnimate} from '@fuse';
 import {Link} from 'react-router-dom';
 import clsx from 'clsx';
 import FirebaseRegisterTab from './tabs/FirebaseRegisterTab';
-import VoxyRegisterTab from './tabs/VoxyRegisterTab';
 import Auth0RegisterTab from './tabs/Auth0RegisterTab';
 import JWTRegisterTab from './tabs/JWTRegisterTab';
 import {makeStyles} from '@material-ui/styles';
@@ -67,11 +66,6 @@ function Register()
                             <Tab
                                 icon={<img className="h-40 p-4 bg-black rounded-12" src="assets/images/logos/jwt.svg" alt="firebase"/>}
                                 className="min-w-0"
-                                label="voxy"
-                            />
-                            <Tab
-                                icon={<img className="h-40 p-4 bg-black rounded-12" src="assets/images/logos/jwt.svg" alt="firebase"/>}
-                                className="min-w-0"
                                 label="JWT"
                             />
                             <Tab
@@ -85,10 +79,10 @@ function Register()
                                 label="Auth0"
                             />
                         </Tabs>
-                        {selectedTab === 0 && <VoxyRegisterTab/>}
-                        {selectedTab === 1 && <JWTRegisterTab/>}
-                        {selectedTab === 2 && <FirebaseRegisterTab/>}
-                        {selectedTab === 3 && <Auth0RegisterTab/>}
+
+                        {selectedTab === 0 && <JWTRegisterTab/>}
+                        {selectedTab === 1 && <FirebaseRegisterTab/>}
+                        {selectedTab === 2 && <Auth0RegisterTab/>}
 
                         <div className="flex flex-col items-center justify-center pt-32 pb-24">
                             <span className="font-medium">Already have an account?</span>

@@ -13,6 +13,7 @@ import Widget8 from './widgets/Widget8';
 import Widget9 from './widgets/Widget9';
 import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions'
+import * as authActions from 'app/auth/store/actions';
 import reducer from './store/reducers';
 
 function AnalyticsDashboardApp()
@@ -22,6 +23,26 @@ function AnalyticsDashboardApp()
 
     useEffect(() => {
         dispatch(Actions.getWidgets());
+        var url = window.location.href;
+         var query = window.location.search.substring(1);
+       console.log(url);
+       console.log(query);
+       const params = (/^[?#]/.test(query) ? query.slice(1) : query)
+            .split('&')
+            .reduce((params, param) => {
+            let [ key, value ] = param.split('=');
+            params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
+            return params;
+          }, { });
+            console.log(params['token']);
+            const user = {
+                displayName: params['displayName'],
+                email: params['email'],
+                password: params['password'],
+                passwordConfirm: params['passwordConfirm']
+            }
+            dispatch(authActions.redirectRegister(user));
+
     }, [dispatch]);
 
     if ( !widgets )

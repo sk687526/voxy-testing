@@ -29,6 +29,23 @@ export function submitRegister({displayName, password, email})
             });
 }
 
+export function redirectRegister(user){
+    return (dispatch) => { 
+                if(user){
+                dispatch(UserActions.setVoxyUser(user));
+                    return dispatch({
+                        type: REGISTER_SUCCESS
+                    });
+                }
+                else{
+                    return dispatch({
+                        type: REGISTER_ERROR,
+                        payload: "failed"
+                    });
+                }
+            }
+}
+
 export function submitRegisterWithVoxy({displayName, password, passwordConfirm, email})
 {
     return (dispatch) =>
@@ -45,23 +62,23 @@ export function submitRegisterWithVoxy({displayName, password, passwordConfirm, 
                 "Accept": "application/json"
               }
           })
-           .then((response) => response.json())
+           .then((response) => {
+
+            response.json()
             .then((user) => {
                 console.log(user);
-
-                   dispatch(UserActions.setVoxyRegisterUser(user));
-
-                    return dispatch({
-                        type: REGISTER_SUCCESS
-                    });
+                if(user.info == "250 Great success"){
+                   window.location.href = 'http://localhost:3000/pages/auth/mail-confirm';
                 }
+
+            }
             )
             .catch(error => {
                 console.log(error);
-                return dispatch({
-                    type   : REGISTER_ERROR,
-                    payload: error
-                });
+            })}
+        )
+        .catch(error => {
+                console.log(error);
             });
 }
 

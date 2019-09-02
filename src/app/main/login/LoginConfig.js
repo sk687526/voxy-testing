@@ -26,7 +26,7 @@ export const LoginConfig = {
     auth    : authRoles.onlyGuest,
     routes  : [
         {
-           path     : '/login/1',
+            path     : '/login/1',
             component: Login
         }
     ]

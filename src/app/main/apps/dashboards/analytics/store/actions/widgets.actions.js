@@ -7,11 +7,10 @@ export function getWidgets()
     const request = axios.get('/api/analytics-dashboard-app/widgets');
 
     return (dispatch) =>
-        request.then((response) =>{
-        	console.log(response);
+        request.then((response) =>
             dispatch({
                 type   : GET_WIDGETS,
                 payload: response.data
-            })}
+            })
         );
 }

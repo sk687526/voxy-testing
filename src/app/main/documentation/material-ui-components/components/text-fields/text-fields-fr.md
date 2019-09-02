@@ -15,7 +15,7 @@ Le composant d'encapsulation `TextField` est un contrôle de formulaire complet 
 
 {{"demo": "pages/components/text-fields/TextFields.js"}}
 
-> **Remarque:** Cette version du champ de texte n'est plus documentée dans la documentation de material design.
+> **Note:** This version of the text field is no longer documented in the [Material Design guidelines](https://material.io/), but Material-UI will continue to support it.
 
 ## Encadré
 
@@ -81,7 +81,7 @@ Les icônes peuvent être spécifiées comme prédéfinies ou ajoutées.
 
 Le label "shrink" n'est pas toujours correct. Le label d'input est supposé se réduire dès que l'input affiche quelque chose. Dans certaines circonstances, nous ne pouvons pas déterminer l'état de "réduction" (entrée de numéro, entrée de date / heure, entrée de bande). Vous remarquerez peut-être un chevauchement.
 
-![shrink](/static/images/text-fields/shrink.png)
+![shrink](/material-ui-static/images/text-fields/shrink.png)
 
 Pour contourner le problème, vous pouvez forcer l'état "shrink" de la legende.
 
@@ -95,13 +95,47 @@ ou
 <InputLabel shrink>Contagem</InputLabel>
 ```
 
-## Input formatés
+## Integration with 3rd party input libraries
 
-Vous pouvez utiliser des bibliothèques tierces pour formater un input. Vous devez fournir une implémentation personnalisée de l'élément `<input>` avec la propriété `inputComponent`. Le composantinput fourni doit gérer la propriété `inputRef`. La propriété doit être appelée avec une valeur implémentant l'interface [`HTMLInputElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement).
+You can use third-party libraries to format an input. You have to provide a custom implementation of the `<input>` element with the `inputComponent` property.
 
-La démo suivante utilise les bibliothèques [react-text-mask](https://github.com/text-mask/text-mask) et [react-number-format](https://github.com/s-yadav/react-number-format).
+La démo suivante utilise les bibliothèques [react-text-mask](https://github.com/text-mask/text-mask) et [react-number-format](https://github.com/s-yadav/react-number-format). The same concept could be applied to [e.g. react-stripe-element](https://github.com/mui-org/material-ui/issues/16037).
 
 {{"demo": "pages/demos/text-fields/FormattedInputs.js"}}
+
+The provided input component should handle the `inputRef` property. The property should be called with a value that implements the following interface:
+
+```ts
+interface InputElement {
+  focus(): void;
+  value?: string;
+}
+```
+
+```jsx
+function MyInputComponent(props) {
+  const { component: Component, inputRef, ...other } = props;
+
+  // implement `InputElement` interface
+  React.useImperativeHandle(inputRef, () => ({
+    focus: () => {
+      // logic to focus the rendered component from 3rd party belongs here
+    },
+    // hiding the value e.g. react-stripe-elements
+  }));
+
+  // `Component` will be your `SomeThirdPartyComponent` from below
+  return <Component {...other} />;
+}
+
+// usage
+<TextField
+  InputProps={{
+    inputComponent: MyInputComponent,
+    inputProps: { component: SomeThirdPartyComponent },
+  }}
+/>;
+```
 
 ## Accessibilité
 

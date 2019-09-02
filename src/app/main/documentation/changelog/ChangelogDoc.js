@@ -5,6 +5,51 @@ import ChangelogCard from './ChangelogCard';
 
 const changelogData = [
     {
+        version     : '3.2.2',
+        date        : '2019-08-09',
+        newChanges  : [
+            "withRouterAndRef hoc added for use forwardRef with withRouter.",
+            "scrollToTopOnRouteChange added to FuseScrollbars.",
+            <span>Nested Object support added for useForm hook. <br/>(use with attribute <code>{`name="profile.username" value={form.profile.username}`}</code>)</span>
+        ],
+        fixedChanges: [
+            "scrollToTopOnChildChange changed with scrollToTopOnRouteChange in FusePageCarded.",
+            "Route component theme settings do not applied if the route is the entry path of the app.",
+        ]
+    },
+    {
+        version     : '3.2.1',
+        date        : '2019-08-08',
+        newChanges  : [
+            "material-ui updated to v4.3.1",
+            "tailwind config updated.",
+            "All dependency packages updated.",
+            "Some import paths optimized.",
+            "HorizontalNavigation active highlighting added for group and collapse navigation items."
+        ],
+        fixedChanges: [
+            "FuseLayout do not hold render until settings at the redux state is updated. This causes multiple mount of the route component which has different layout settings.",
+            "Layout style issues due to browser updates.",
+            "Removal of event listeners in FuseScrollbars (@stephankaag).",
+        ]
+    },
+    {
+        version        : '3.2.0',
+        date           : '2019-07-31',
+        newChanges     : [
+            "material-ui updated to v4.3.0",
+            "tailwind config updated.",
+            "All dependency packages updated."
+        ],
+        fixedChanges   : [
+            "Academy App is not scroll correctly when the theme footer is static.",
+            "Scrumboard App list name form not works.",
+        ],
+        breakingChanges: [
+            "tailwindcss colors matched with material colors (shade values changed with hues for example: .bg-red-dark to .bg-red-700)",
+        ]
+    },
+    {
         version   : '3.1.0',
         date      : '2019-06-27',
         newChanges: [

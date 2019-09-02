@@ -1,32 +1,14 @@
 import React from 'react';
-import {authRoles} from 'app/auth';
 
 export const LoginPageConfig = {
     settings: {
         layout: {
-            config: {
-                navbar        : {
-                    display: false
-                },
-                toolbar       : {
-                    display: false
-                },
-                footer        : {
-                    display: false
-                },
-                leftSidePanel : {
-                    display: false
-                },
-                rightSidePanel: {
-                    display: false
-                }
-            }
+            config: {}
         }
     },
-    auth    : authRoles.onlyGuest,
     routes  : [
         {
-            path     : '/login',
+            path     : '/pages/auth/login',
             component: React.lazy(() => import('./LoginPage'))
         }
     ]

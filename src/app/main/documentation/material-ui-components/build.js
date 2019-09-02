@@ -26,6 +26,7 @@ marked.Lexer.prototype.lex = function lex(src) {
         .replace(/\u2424/g, '\n');
     return this.token(src, true);
 };
+
 const renderer = new marked.Renderer();
 
 marked.setOptions({
@@ -104,7 +105,7 @@ ${code}
 };
 
 renderer.codespan = (code, lang) => {
-    const response = `<code>{%%${code}%%}</code>`;
+    const response = `<code>{%%${_.unescape(code)}%%}</code>`;
     return response.replace(new RegExp('%%', 'g'), '`');
 };
 
@@ -182,6 +183,7 @@ function getHtmlCode(markdownSource)
         .replace(new RegExp('class=', 'g'), "className=")
         .replace(new RegExp('<img([^>]+)(\\s*[^\\/])>', 'gm'), '$1/>')
         .replace(new RegExp('<br>', 'g'), '<br/>')
+        .replace(new RegExp('/static/', 'g'), "/material-ui-static/")
     return response;
 }
 
@@ -251,6 +253,7 @@ function writePage(file)
                         component="a" 
                         href="https://material-ui.com/components/${path.basename(file)}" 
                         target="_blank"
+                        role="button"
                         >
                         <Icon className="mr-4">link</Icon>
                         Reference
@@ -411,7 +414,8 @@ function replaceInExamples()
             const fileSource = fs.readFileSync(file, 'utf8');
             const result = fileSource
                 .replace(new RegExp('docs/src/modules/utils/compose', 'g'), 'app/main/documentation/material-ui-components/compose')
-                .replace(new RegExp('docs/src/modules/components/MarkdownElement', 'g'), "app/main/documentation/material-ui-components/MarkdownElement");
+                .replace(new RegExp('docs/src/modules/components/MarkdownElement', 'g'), "app/main/documentation/material-ui-components/MarkdownElement")
+                .replace(new RegExp('/static/', 'g'), "/material-ui-static/");
             fs.writeFileSync(file, result, 'utf8', function (err) {
                 if ( err ) return console.log(err);
             });
@@ -423,11 +427,12 @@ function removeExcludedComponents()
 {
     const excludedComponents = [
         path.resolve(examplesDirectory, './breakpoints'),
-        path.resolve(examplesDirectory, './about-the-lab'),
         path.resolve(examplesDirectory, './use-media-query'),
-        path.resolve(examplesDirectory, './toggle-button'),
-        path.resolve(examplesDirectory, './slider'),
+        path.resolve(examplesDirectory, './about-the-lab'),
+        path.resolve(examplesDirectory, './rating'),
         path.resolve(examplesDirectory, './speed-dial'),
+        path.resolve(examplesDirectory, './toggle-button'),
+        path.resolve(examplesDirectory, './tree-view'),
         path.resolve(examplesDirectory, './icons')
     ];
 

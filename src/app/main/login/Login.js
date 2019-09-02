@@ -7,7 +7,6 @@ import clsx from 'clsx';
 import JWTLoginTab from './tabs/JWTLoginTab';
 import FirebaseLoginTab from './tabs/FirebaseLoginTab';
 import Auth0LoginTab from './tabs/Auth0LoginTab';
-import VoxyTab from './tabs/VoxyTab';
 import {makeStyles} from '@material-ui/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -67,11 +66,6 @@ function Login()
                             <Tab
                                 icon={<img className="h-40 p-4 bg-black rounded-12" src="assets/images/logos/jwt.svg" alt="firebase"/>}
                                 className="min-w-0"
-                                label="Voxy"
-                            />
-                            <Tab
-                                icon={<img className="h-40 p-4 bg-black rounded-12" src="assets/images/logos/jwt.svg" alt="firebase"/>}
-                                className="min-w-0"
                                 label="JWT"
                             />
                             <Tab
@@ -85,14 +79,12 @@ function Login()
                                 label="Auth0"
                             />
                         </Tabs>
-                        {selectedTab === 0 && <VoxyTab/>}
-                        {selectedTab === 1 && <JWTLoginTab/>}
-                        {selectedTab === 2 && <FirebaseLoginTab/>}
-                        {selectedTab === 3 && <Auth0LoginTab/>}
-                        
+
+                        {selectedTab === 0 && <JWTLoginTab/>}
+                        {selectedTab === 1 && <FirebaseLoginTab/>}
+                        {selectedTab === 2 && <Auth0LoginTab/>}
 
                         <div className="flex flex-col items-center justify-center pt-32">
-                            
                             <span className="font-medium">Don't have an account?</span>
                             <Link className="font-medium" to="/register">Create an account</Link>
                             <Link className="font-medium mt-8" to="/">Back to Dashboard</Link>

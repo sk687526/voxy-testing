@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Card, CardContent, TextField, Typography} from '@material-ui/core';
+import {Button, Card, Icon, InputAdornment, CardContent, TextField, Typography} from '@material-ui/core';
 import {darken} from '@material-ui/core/styles/colorManipulator';
 import {makeStyles} from '@material-ui/styles';
 import {FuseAnimate} from '@fuse';
@@ -13,6 +13,8 @@ const useStyles = makeStyles(theme => ({
         color     : theme.palette.primary.contrastText
     }
 }));
+
+
 
 function ResetPasswordPage2()
 {
@@ -38,7 +40,42 @@ function ResetPasswordPage2()
     function handleSubmit(ev)
     {
         ev.preventDefault();
-        resetForm();
+         console.log(ev.target.email.value);
+         var url = window.location.href;
+         var query = window.location.search.substring(1);
+       console.log(url);
+       console.log(query);
+       const params = (/^[?#]/.test(query) ? query.slice(1) : query)
+            .split('&')
+            .reduce((params, param) => {
+            let [ key, value ] = param.split('=');
+            params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
+            return params;
+          }, { });
+            console.log(params['token']);
+        fetch('http://localhost:3002/user/resetpassword', {
+            method: "POST",
+              body: JSON.stringify({
+                email: ev.target.email.value,
+                password: ev.target.password.value,
+                confirmPassword: ev.target.passwordConfirm.value,
+                token: params['token']
+              }),
+              //mode: "no-cors",
+              headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+        })
+        .then(response => {
+             if( response.status === 200 ){
+                // redirect here
+                window.location.href = 'http://localhost:3000/login';
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     return (

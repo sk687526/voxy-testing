@@ -1,12 +1,11 @@
 import React from 'react';
-import {Button, Card, Icon, InputAdornment, CardContent, TextField, Typography} from '@material-ui/core';
+import {Button, Card, CardContent, TextField, Typography} from '@material-ui/core';
 import {darken} from '@material-ui/core/styles/colorManipulator';
 import {makeStyles} from '@material-ui/styles';
 import {FuseAnimate} from '@fuse';
 import {useForm} from '@fuse/hooks';
 import clsx from 'clsx';
 import {Link} from 'react-router-dom';
-
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,27 +38,7 @@ function ResetPasswordPage()
     function handleSubmit(ev)
     {
         ev.preventDefault();
-         console.log(ev.target.email.value);
-        fetch('http://localhost:3002/user/passwordreset', {
-            method: "POST",
-              body: JSON.stringify({
-                email: ev.target.email.value
-              }),
-              //mode: "no-cors",
-              headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-              }
-        })
-        .then(response => {
-             if( response.status === 200 ){
-                // redirect here
-                window.location.href = 'http://localhost:3000/pages/auth/mail-confirm';
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        }) 
+        resetForm();
     }
 
     return (
@@ -87,18 +66,11 @@ function ResetPasswordPage()
                                 <TextField
                                     className="mb-16"
                                     label="Email"
+                                    autoFocus
                                     type="email"
                                     name="email"
                                     value={form.email}
                                     onChange={handleChange}
-                                    variant="outlined"
-                                    validations="isEmail"
-                                    validationErrors={{
-                                        isEmail: 'Please enter a valid email'
-                                    }}
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">email</Icon></InputAdornment>
-                                    }}
                                     variant="outlined"
                                     required
                                     fullWidth
@@ -112,33 +84,17 @@ function ResetPasswordPage()
                                     value={form.password}
                                     onChange={handleChange}
                                     variant="outlined"
-                                    validations="equalsField:passwordConfirm"
-                                    validationErrors={{
-                                        equalsField: 'Passwords do not match'
-                                    }}
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">vpn_key</Icon></InputAdornment>
-                                    }}
-                                    variant="outlined"
                                     required
                                     fullWidth
                                 />
 
                                 <TextField
                                     className="mb-16"
-                                    value={form.passwordConfirm}
-                                    onChange={handleChange}
-                                    variant="outlined"
+                                    label="Password (Confirm)"
                                     type="password"
                                     name="passwordConfirm"
-                                    label="Confirm Password"
-                                    validations="equalsField:password"
-                                    validationErrors={{
-                                        equalsField: 'Passwords do not match'
-                                    }}
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">vpn_key</Icon></InputAdornment>
-                                    }}
+                                    value={form.passwordConfirm}
+                                    onChange={handleChange}
                                     variant="outlined"
                                     required
                                     fullWidth

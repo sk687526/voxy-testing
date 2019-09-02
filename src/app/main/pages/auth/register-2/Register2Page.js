@@ -1,11 +1,15 @@
-import React from 'react';
-import {Button, Card, CardContent, Checkbox, FormControl, FormControlLabel, TextField, Typography} from '@material-ui/core';
+import React, {useEffect, useRef, useState} from 'react';
+import {Button, InputAdornment, Icon, Card, CardContent, Checkbox, FormControl, FormControlLabel, TextField, Typography} from '@material-ui/core';
 import {darken} from '@material-ui/core/styles/colorManipulator';
 import {makeStyles} from '@material-ui/styles';
 import {FuseAnimate} from '@fuse';
 import {useForm} from '@fuse/hooks';
 import clsx from 'clsx';
 import {Link} from 'react-router-dom';
+import Formsy from 'formsy-react';
+import {TextFieldFormsy} from '@fuse';
+import * as authActions from 'app/auth/store/actions';
+import {useDispatch, useSelector} from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -16,6 +20,37 @@ const useStyles = makeStyles(theme => ({
 
 function Register2Page()
 {
+    const dispatch = useDispatch();
+    const register = useSelector(({auth}) => auth.register);
+
+    const [isFormValid, setIsFormValid] = useState(false);
+    const formRef = useRef(null);
+
+    useEffect(() => {
+        if ( register.error && (register.error.username || register.error.password || register.error.email) )
+        {
+            formRef.current.updateInputsWithError({
+                ...register.error
+            });
+            disableButton();
+        }
+    }, [register.error]);
+
+    function disableButton()
+    {
+        setIsFormValid(false);
+    }
+
+    function enableButton()
+    {
+        setIsFormValid(true);
+    }
+
+    function handleSubmit(model)
+    {
+        dispatch(authActions.submitRegisterWithVoxy(model));
+    }
+
     const classes = useStyles();
 
     const {form, handleChange, resetForm} = useForm({
@@ -26,7 +61,7 @@ function Register2Page()
         acceptTermsConditions: false
     });
 
-    function isFormValid()
+   /* function isFormValid()
     {
         return (
             form.email.length > 0 &&
@@ -41,7 +76,7 @@ function Register2Page()
     {
         ev.preventDefault();
         resetForm();
-    }
+    }*/
 
     return (
         <div className={clsx(classes.root, "flex flex-col flex-auto flex-shrink-0 p-24 md:flex-row md:p-0")}>
@@ -75,19 +110,32 @@ function Register2Page()
 
                         <Typography variant="h6" className="md:w-full mb-32">CREATE AN ACCOUNT</Typography>
 
-                        <form
+                        <Formsy
+                            onValidSubmit={handleSubmit}
+                            onValid={enableButton}
+                            onInvalid={disableButton}
+                            ref={formRef}
                             name="registerForm"
                             noValidate
                             className="flex flex-col justify-center w-full"
-                            onSubmit={handleSubmit}
                         >
 
-                            <TextField
+                            <TextFieldFormsy
                                 className="mb-16"
-                                label="Name"
+                                type="text"
+                                name="displayName"
+                                label="displayName"
+                                validations={{
+                                    minLength: 4
+                                }}
+                                validationErrors={{
+                                    minLength: 'Min character length is 4'
+                                }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">person</Icon></InputAdornment>
+                                }}
                                 autoFocus
                                 type="name"
-                                name="name"
                                 value={form.name}
                                 onChange={handleChange}
                                 variant="outlined"
@@ -95,11 +143,19 @@ function Register2Page()
                                 fullWidth
                             />
 
-                            <TextField
+                            <TextFieldFormsy
                                 className="mb-16"
-                                label="Email"
-                                type="email"
+                                type="text"
                                 name="email"
+                                label="Email"
+                                validations="isEmail"
+                                validationErrors={{
+                                    isEmail: 'Please enter a valid email'
+                                }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">email</Icon></InputAdornment>
+                                }}
+                                type="email"
                                 value={form.email}
                                 onChange={handleChange}
                                 variant="outlined"
@@ -107,23 +163,39 @@ function Register2Page()
                                 fullWidth
                             />
 
-                            <TextField
+                            <TextFieldFormsy
                                 className="mb-16"
                                 label="Password"
                                 type="password"
                                 name="password"
                                 value={form.password}
                                 onChange={handleChange}
+                                type="password"
+                                validations="equalsField:passwordConfirm"
+                                validationErrors={{
+                                    equalsField: 'Passwords do not match'
+                                }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">vpn_key</Icon></InputAdornment>
+                                }}
                                 variant="outlined"
+                                 fullWidth
                                 required
-                                fullWidth
                             />
 
-                            <TextField
+                            <TextFieldFormsy
                                 className="mb-16"
-                                label="Password (Confirm)"
                                 type="password"
                                 name="passwordConfirm"
+                                label="Confirm Password"
+                                validations="equalsField:password"
+                                validationErrors={{
+                                    equalsField: 'Passwords do not match'
+                                }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">vpn_key</Icon></InputAdornment>
+                                }}
+                                type="password"
                                 value={form.passwordConfirm}
                                 onChange={handleChange}
                                 variant="outlined"
@@ -144,21 +216,22 @@ function Register2Page()
                             </FormControl>
 
                             <Button
+                                type="submit"
                                 variant="contained"
                                 color="primary"
+                                aria-label="REGISTER"
+                                disabled={!isFormValid}
+                                value="legacy"
                                 className="w-full mx-auto mt-16"
-                                aria-label="Register"
-                                disabled={!isFormValid()}
-                                type="submit"
                             >
                                 CREATE AN ACCOUNT
                             </Button>
 
-                        </form>
+                        </Formsy>
 
                         <div className="flex flex-col items-center justify-center pt-32 pb-24">
                             <span className="font-medium">Already have an account?</span>
-                            <Link className="font-medium" to="/pages/auth/login-2">Login</Link>
+                            <Link className="font-medium" to="/login">Login</Link>
                         </div>
 
                     </CardContent>

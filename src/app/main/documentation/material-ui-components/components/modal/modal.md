@@ -34,10 +34,12 @@ Modal is a lower-level construct that is leveraged by the following components:
 
 {{"demo": "pages/components/modal/SimpleModal.js"}}
 
+Notice that you can disable the blue outline with the `outline: 0` CSS property.
+
 ## Performance
 
 The content of the modal is **lazily mounted** into the DOM.
-It ensures that having many closed modal in your React tree won't slow down your page.
+It ensures that having many closed modals in your React tree won't slow down your page.
 
 However, creating React elements has a cost too. Consider the following case:
 
@@ -85,16 +87,23 @@ Additionally, you may give a description of your modal with the `aria-describedb
 
 ```jsx
 <Modal
-  aria-labelledby="simple-modal-title"
-  aria-describedby="simple-modal-description"
+  aria-labelledby="modal-title"
+  aria-describedby="modal-description"
 >
-  <Typography variant="h6" id="modal-title">
+  <h2 id="modal-title">
     My Title
-  </Typography>
-  <Typography variant="subtitle1" id="simple-modal-description">
+  </h2>
+  <p id="modal-description">
     My Description
-  </Typography>
+  </p>
 </Modal>
 ```
 
 - The [WAI-ARIA Authoring Practices 1.1](https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/dialog.html) can help you set the initial focus on the most relevant element, based on your modal content.
+
+## Server-side modal
+
+React [doesn't support](https://github.com/facebook/react/issues/13097) the [`createPortal()`](https://reactjs.org/docs/portals.html) API on the server.
+In order to make it work, you need to disable this feature with the `disablePortal` prop:
+
+{{"demo": "pages/components/modal/ServerModal.js"}}

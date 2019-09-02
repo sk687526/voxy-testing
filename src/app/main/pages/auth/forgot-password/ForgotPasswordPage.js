@@ -5,7 +5,7 @@ import {makeStyles} from '@material-ui/styles';
 import {FuseAnimate} from '@fuse';
 import {useForm} from '@fuse/hooks';
 import clsx from 'clsx';
-import {Link, Redirect} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,30 +29,8 @@ function ForgotPasswordPage()
     function handleSubmit(ev)
     {
         ev.preventDefault();
-        console.log(ev.target.email.value);
-        fetch('http://localhost:3002/user/passwordreset', {
-            method: "POST",
-              body: JSON.stringify({
-                email: ev.target.email.value
-              }),
-              //mode: "no-cors",
-              headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-              }
-        })
-        .then(response => {
-             if( response.status === 200 ){
-                // redirect here
-                window.location.href = 'http://localhost:3000/pages/auth/mail-confirm';
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        }) 
+        resetForm();
     }
-    
-
 
     return (
         <div className={clsx(classes.root, "flex flex-col flex-auto flex-shrink-0 items-center justify-center p-32")}>
@@ -90,6 +68,7 @@ function ForgotPasswordPage()
                                     required
                                     fullWidth
                                 />
+
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -102,6 +81,7 @@ function ForgotPasswordPage()
                                 </Button>
 
                             </form>
+
                             <div className="flex flex-col items-center justify-center pt-32 pb-24">
                                 <Link className="font-medium" to="/pages/auth/login">Go back to login</Link>
                             </div>

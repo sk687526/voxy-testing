@@ -15,7 +15,7 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 
 {{"demo": "pages/components/text-fields/TextFields.js"}}
 
-> **Примечание:** Эта версия текстового поля больше не документирована в спецификации Material Design.
+> **Note:** This version of the text field is no longer documented in the [Material Design guidelines](https://material.io/), but Material-UI will continue to support it.
 
 ## Контурный стиль
 
@@ -81,7 +81,7 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 
 Состояние метки поля ввода (label) "shrink" не всегда корректно. Предполагается, что метка поля ввода уменьшается, как только в поле ввода что-нибудь отображается. В некоторых случаях мы не можем определить состояние "shrink" (числовое поле, поле даты, Stripe input). Вы могли заметить совпадения.
 
-![сжатие](/static/images/text-fields/shrink.png)
+![сжатие](/material-ui-static/images/text-fields/shrink.png)
 
 Чтобы решить эту проблему, вы можете принудительно изменить состояние метки.
 
@@ -95,13 +95,47 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 <InputLabel shrink>Contagem</InputLabel>
 ```
 
-## Форматированное поле ввода
+## Integration with 3rd party input libraries
 
-Вы можете использовать сторонние библиотеки для форматирования ввода. Вы должны предоставить пользовательскую реализацию элемента `<input>` со свойством `inputComponent`. Предоставленный компонент ввода должен обрабатывать свойство `inputRef`. Свойство должно вызываться со значением, реализующим интерфейс [`HTMLInputElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement).
+You can use third-party libraries to format an input. You have to provide a custom implementation of the `<input>` element with the `inputComponent` property.
 
-В следующем примере используются библиотеки [response-text-mask](https://github.com/text-mask/text-mask) и [response-number-format](https://github.com/s-yadav/react-number-format).
+В следующем примере используются библиотеки [response-text-mask](https://github.com/text-mask/text-mask) и [response-number-format](https://github.com/s-yadav/react-number-format). The same concept could be applied to [e.g. react-stripe-element](https://github.com/mui-org/material-ui/issues/16037).
 
 {{"demo": "pages/components/text-fields/FormattedInputs.js"}}
+
+The provided input component should handle the `inputRef` property. The property should be called with a value that implements the following interface:
+
+```ts
+interface InputElement {
+  focus(): void;
+  value?: string;
+}
+```
+
+```jsx
+function MyInputComponent(props) {
+  const { component: Component, inputRef, ...other } = props;
+
+  // implement `InputElement` interface
+  React.useImperativeHandle(inputRef, () => ({
+    focus: () => {
+      // logic to focus the rendered component from 3rd party belongs here
+    },
+    // hiding the value e.g. react-stripe-elements
+  }));
+
+  // `Component` will be your `SomeThirdPartyComponent` from below
+  return <Component {...other} />;
+}
+
+// usage
+<TextField
+  InputProps={{
+    inputComponent: MyInputComponent,
+    inputProps: { component: SomeThirdPartyComponent },
+  }}
+/>;
+```
 
 ## Доступность
 
@@ -128,7 +162,7 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 
 ## Дополнительные проекты
 
-Для более сложных вариантов использования вы можете воспользоваться:
+Для более сложных решений вы можете применить следующие пакеты:
 
 - [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui) Набор компонентов-оберток для облегчения работы с Material UI в связке с Redux Form.
 - [formik-material-ui](https://github.com/stackworx/formik-material-ui) Привязки для использования Material-UI с formik.

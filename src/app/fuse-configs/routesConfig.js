@@ -11,7 +11,7 @@ const routeConfigs = [
     ...appsConfigs,
     ...pagesConfigs,
     //ExampleConfig,
-    LoginConfig,
+   LoginConfig,
     RegisterConfig
 ];
 

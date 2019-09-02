@@ -5,7 +5,7 @@ components: CircularProgress, LinearProgress
 
 # Progresso
 
-<p class="description">Progress indicators commonly known as spinners, express an unspecified wait time or display the length of a process. The animation works with CSS, not JavaScript.</p>
+<p class="description">Indicadores de progresso comumente conhecidos como spinners, expressam um tempo de espera não especificado ou exibem a duração de um processo. A animação funciona com CSS, não com JavaScript.</p>
 
 [Indicadores de progresso](https://material.io/design/components/progress-indicators.html) informam aos usuários sobre o estado de processos em progresso, como o carregamento de um aplicativo, envio de um formulário, ou atualizações. Eles comunicam o estado do aplicativo e indicam ações disponíveis, tal como, se o usuário pode sair da página atual.
 
@@ -97,7 +97,7 @@ Existem [3 limites importantes](https://www.nngroup.com/articles/response-times-
 
 Quando o processamento é particularmente lento, você pode perder a animação do traço ou ver raios aleatórios com CircularProgress. Para não bloquear o processo principal de renderização, você deve processar suas operações com um web worker ou por batch.
 
-![carga pesada](/static/images/progress/heavy-load.gif)
+![carga pesada](/material-ui-static/images/progress/heavy-load.gif)
 
 Quando não for possível, você pode aproveitar a propriedade `disableShrink` para atenuar o problema. Veja [este issue](https://github.com/mui-org/material-ui/issues/10327).
 

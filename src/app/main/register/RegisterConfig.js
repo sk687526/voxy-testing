@@ -26,7 +26,7 @@ export const RegisterConfig = {
     auth    : authRoles.onlyGuest,
     routes  : [
         {
-            path     : '/register',
+            path     : '/register/1',
             component: Register
         }
     ]

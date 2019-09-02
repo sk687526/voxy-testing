@@ -1,11 +1,15 @@
-import React from 'react';
-import {Button, Card, CardContent, Checkbox, Divider, FormControl, FormControlLabel, TextField, Typography} from '@material-ui/core';
+import React, {useEffect, useRef, useState} from 'react';
+import {Button, Card, InputAdornment, Icon, CardContent, Checkbox, Divider, FormControl, FormControlLabel, TextField, Typography} from '@material-ui/core';
 import {makeStyles} from '@material-ui/styles';
 import {darken} from '@material-ui/core/styles/colorManipulator';
 import {FuseAnimate} from '@fuse';
 import {useForm} from '@fuse/hooks';
 import {Link} from 'react-router-dom';
 import clsx from 'clsx';
+import {TextFieldFormsy} from '@fuse';
+import Formsy from 'formsy-react';
+import * as authActions from 'app/auth/store/actions';
+import {useDispatch, useSelector} from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -16,6 +20,40 @@ const useStyles = makeStyles(theme => ({
 
 function Login2Page()
 {
+
+    const dispatch = useDispatch();
+    const login = useSelector(({auth}) => auth.login);
+
+    const [isFormValid, setIsFormValid] = useState(false);
+    const formRef = useRef(null);
+
+    useEffect(() => {
+        if ( login.error && (login.error.email || login.error.password) )
+        {
+            formRef.current.updateInputsWithError({
+                ...login.error
+            });
+            disableButton();
+        }
+    }, [login.error]);
+
+    function disableButton()
+    {
+        setIsFormValid(false);
+    }
+
+    function enableButton()
+    {
+        setIsFormValid(true);
+    }
+
+    function handleSubmit(model)
+    {
+        console.log(model);
+        dispatch(authActions.submitLoginWithVoxy(model));
+    }
+
+
     const classes = useStyles();
 
     const {form, handleChange, resetForm} = useForm({
@@ -24,7 +62,7 @@ function Login2Page()
         remember: true
     });
 
-    function isFormValid()
+   /* function isFormValid()
     {
         return (
             form.email.length > 0 &&
@@ -36,7 +74,7 @@ function Login2Page()
     {
         ev.preventDefault();
         resetForm();
-    }
+    }*/
 
     return (
         <div className={clsx(classes.root, "flex flex-col flex-auto flex-shrink-0 p-24 md:flex-row md:p-0")}>
@@ -69,36 +107,52 @@ function Login2Page()
 
                         <Typography variant="h6" className="md:w-full mb-32">LOGIN TO YOUR ACCOUNT</Typography>
 
-                        <form
+                        <Formsy
+                            onValidSubmit={handleSubmit}
+                            onValid={enableButton}
+                            onInvalid={disableButton}
+                            ref={formRef}
                             name="loginForm"
                             noValidate
                             className="flex flex-col justify-center w-full"
-                            onSubmit={handleSubmit}
                         >
 
-                            <TextField
+                            <TextFieldFormsy
                                 className="mb-16"
-                                label="Email"
-                                autoFocus
-                                type="email"
+                                type="text"
                                 name="email"
-                                value={form.email}
-                                onChange={handleChange}
+                                label="Username/Email"
+                                value="admin"
+                                validations={{
+                                    minLength: 4
+                                }}
+                                validationErrors={{
+                                    minLength: 'Min character length is 4'
+                                }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">email</Icon></InputAdornment>
+                                }}
                                 variant="outlined"
                                 required
-                                fullWidth
                             />
 
-                            <TextField
+                            <TextFieldFormsy
                                 className="mb-16"
-                                label="Password"
                                 type="password"
                                 name="password"
-                                value={form.password}
-                                onChange={handleChange}
+                                label="Password"
+                                value="admin"
+                                validations={{
+                                    minLength: 4
+                                }}
+                                validationErrors={{
+                                    minLength: 'Min character length is 4'
+                                }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">vpn_key</Icon></InputAdornment>
+                                }}
                                 variant="outlined"
                                 required
-                                fullWidth
                             />
 
                             <div className="flex items-center justify-between">
@@ -123,14 +177,16 @@ function Login2Page()
                             <Button
                                 variant="contained"
                                 color="primary"
+                                type="submit"
                                 className="w-full mx-auto mt-16"
                                 aria-label="LOG IN"
-                                disabled={!isFormValid()}
+                                disabled={!isFormValid}
+                                value="legacy"
                             >
                                 LOGIN
                             </Button>
 
-                        </form>
+                        </Formsy>
 
                         <div className="my-24 flex items-center justify-center">
                             <Divider className="w-32"/>
@@ -150,7 +206,7 @@ function Login2Page()
 
                         <div className="flex flex-col items-center justify-center pt-32 pb-24">
                             <span className="font-medium">Don't have an account?</span>
-                            <Link className="font-medium" to="/pages/auth/register-2">Create an account</Link>
+                            <Link className="font-medium" to="/register">Create an account</Link>
                         </div>
 
                     </CardContent>

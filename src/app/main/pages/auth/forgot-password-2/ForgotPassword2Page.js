@@ -5,7 +5,7 @@ import {darken} from '@material-ui/core/styles/colorManipulator';
 import {FuseAnimate} from '@fuse';
 import {useForm} from '@fuse/hooks';
 import clsx from 'clsx';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,7 +29,27 @@ function ForgotPassword2Page()
     function handleSubmit(ev)
     {
         ev.preventDefault();
-        resetForm();
+        console.log(ev.target.email.value);
+        fetch('http://localhost:3002/user/passwordreset', {
+            method: "POST",
+              body: JSON.stringify({
+                email: ev.target.email.value
+              }),
+              //mode: "no-cors",
+              headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+        })
+        .then(response => {
+             if( response.status === 200 ){
+                // redirect here
+                window.location.href = 'http://localhost:3000/pages/auth/mail-confirm';
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        }) 
     }
 
     return (
@@ -97,7 +117,7 @@ function ForgotPassword2Page()
                         </form>
 
                         <div className="flex flex-col items-center justify-center pt-32 pb-24">
-                            <Link className="font-medium" to="/pages/auth/login-2">Go back to login</Link>
+                            <Link className="font-medium" to="/login">Go back to login</Link>
                         </div>
 
                     </CardContent>
