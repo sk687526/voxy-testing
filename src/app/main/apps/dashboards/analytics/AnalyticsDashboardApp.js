@@ -27,6 +27,7 @@ function AnalyticsDashboardApp()
          var query = window.location.search.substring(1);
        console.log(url);
        console.log(query);
+       if(query){
        const params = (/^[?#]/.test(query) ? query.slice(1) : query)
             .split('&')
             .reduce((params, param) => {
@@ -42,7 +43,7 @@ function AnalyticsDashboardApp()
                 passwordConfirm: params['passwordConfirm']
             }
             dispatch(authActions.redirectRegister(user));
-
+        }
     }, [dispatch]);
 
     if ( !widgets )

@@ -2,11 +2,30 @@ import React, {useEffect, useState} from 'react';
 import {Avatar, AppBar, Button, Card, CardContent, Icon, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, Toolbar, Typography} from '@material-ui/core';
 import {FuseAnimateGroup} from '@fuse';
 import axios from 'axios';
+import { makeStyles } from '@material-ui/core/styles';
+import EditGeneralInfo from './edit/EditGeneralInfo';
+import EditWork from './edit/EditWork';
+import EditContact from './edit/EditContact';
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+  input: {
+    display: 'none',
+  },
+}));
+
 
 function AboutTab()
 {
+    const classes = useStyles();
     const [data, setData] = useState(null);
+    const [editGeneral, setEditGeneral] = useState(false);
+    const [editWork, setEditWork] = useState(false);
+    const [editContact, setEditContact] = useState(false);
 
+ 
     useEffect(() => {
         axios.get('/api/profile/about').then(res => {
             setData(res.data);
@@ -16,6 +35,21 @@ function AboutTab()
     if ( !data )
     {
         return null;
+    }
+
+    function onEditGeneral(val){
+        console.log(val);
+        setEditGeneral(val);
+    }
+
+     function onEditWork(val){
+        console.log(val);
+        setEditWork(val);
+    }
+
+    function onEditContact(val){
+        console.log(val);
+        setEditContact(val);
     }
 
     const {general, work, contact, groups, friends} = data;
@@ -35,9 +69,15 @@ function AboutTab()
                                 <Typography variant="subtitle1" color="inherit" className="flex-1">
                                     General Information
                                 </Typography>
+                                <Button color="inherit" onClick={()=>onEditGeneral(true)} >EDIT</Button>
                             </Toolbar>
                         </AppBar>
-
+                        {editGeneral==true?
+                            <div>
+                            <EditGeneralInfo/>
+                            <Button variant="contained" color="primary" onClick={()=>onEditGeneral(false)} className={classes.button}>SUBMIT</Button>
+                        </div>
+                        :
                         <CardContent>
                             <div className="mb-24">
                                 <Typography className="font-bold mb-4 text-15">Gender</Typography>
@@ -66,6 +106,7 @@ function AboutTab()
                             </div>
 
                         </CardContent>
+                    }
                     </Card>
 
                     <Card className="w-full mb-16">
@@ -74,9 +115,15 @@ function AboutTab()
                                 <Typography variant="subtitle1" color="inherit" className="flex-1">
                                     Work
                                 </Typography>
+                                <Button color="inherit" onClick={()=>onEditWork(true)} >EDIT</Button>
                             </Toolbar>
                         </AppBar>
-
+                        {editWork===true?
+                            <div>
+                            <EditWork/>
+                            <Button variant="contained" color="primary" onClick={()=>onEditWork(false)} className={classes.button}>SUBMIT</Button>
+                     </div>
+                            :
                         <CardContent>
                             <div className="mb-24">
                                 <Typography className="font-bold mb-4 text-15">Occupation</Typography>
@@ -106,6 +153,7 @@ function AboutTab()
                                 </table>
                             </div>
                         </CardContent>
+                    }
                     </Card>
 
                     <Card className="w-full mb-16">
@@ -114,9 +162,15 @@ function AboutTab()
                                 <Typography variant="subtitle1" color="inherit" className="flex-1">
                                     Contact
                                 </Typography>
+                                <Button color="inherit" onClick={()=>onEditContact(true)} >EDIT</Button>
                             </Toolbar>
                         </AppBar>
-
+                        {editContact===true?
+                            <div>
+                            <EditContact/>
+                       <Button variant="contained" color="primary" onClick={()=>onEditContact(false)} className={classes.button}>SUBMIT</Button>
+                        </div>
+                            :
                         <CardContent>
                             <div className="mb-24">
                                 <Typography className="font-bold mb-4 text-15">Address</Typography>
@@ -154,6 +208,7 @@ function AboutTab()
                             </div>
 
                         </CardContent>
+                    }
                     </Card>
                 </FuseAnimateGroup>
             </div>

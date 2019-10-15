@@ -13,7 +13,7 @@ function PurchaseButton()
                 variant="contained"
                 color="secondary">
             <Icon className="text-16 mr-4">shopping_cart</Icon>
-            <span>Purchase FUSE React</span>
+            <span>Purchase VOXY React</span>
         </Button>
     );
 }

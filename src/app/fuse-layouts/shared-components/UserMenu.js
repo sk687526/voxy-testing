@@ -3,14 +3,16 @@ import {Avatar, Button, Icon, ListItemIcon, ListItemText, Popover, MenuItem, Typ
 import {useSelector, useDispatch} from 'react-redux';
 import * as authActions from 'app/auth/store/actions';
 import {Link} from 'react-router-dom';
+import faker from 'faker';
 
 function UserMenu(props)
 {
     const dispatch = useDispatch();
+    
     const user = useSelector(({auth}) => auth.user);
 
     const [userMenu, setUserMenu] = useState(null);
-
+    
     const userMenuClick = event => {
         setUserMenu(event.currentTarget);
     };
@@ -18,7 +20,7 @@ function UserMenu(props)
     const userMenuClose = () => {
         setUserMenu(null);
     };
-
+    console.log(user.data);
     return (
         <React.Fragment>
 
@@ -31,6 +33,7 @@ function UserMenu(props)
                     (
                         <Avatar className="">
                             {user.data.displayName[0]}
+                            
                         </Avatar>
                     )
                 }
@@ -94,8 +97,13 @@ function UserMenu(props)
                         </MenuItem>
                         <MenuItem
                             onClick={() => {
+                                localStorage.setItem('myEmailInLocalStorage', '');
+                                localStorage.setItem('myPasswordInLocalStorage', '');
+                                localStorage.setItem('myFlagInLocalStorage', '');
+                                localStorage.setItem('myTimeInLocalStorage', '');
                                 dispatch(authActions.logoutUser());
                                 userMenuClose();
+
                             }}
                         >
                             <ListItemIcon className="min-w-40">

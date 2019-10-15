@@ -28,6 +28,7 @@ function TimelineTab()
 
     useEffect(() => {
         axios.get('/api/profile/timeline').then(res => {
+            console.log(res.data);
             setData(res.data);
         });
     }, []);

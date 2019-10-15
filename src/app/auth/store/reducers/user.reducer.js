@@ -1,4 +1,5 @@
 import * as Actions from '../actions';
+//import undefined from 'firebase/empty-import';
 
 const initialState = {
     role: [],//guest
@@ -26,6 +27,8 @@ const user = function (state = initialState, action) {
                 ...initialState,
                 ...action.payload
             };
+        
+        
         }
         case Actions.REMOVE_USER_DATA:
         {

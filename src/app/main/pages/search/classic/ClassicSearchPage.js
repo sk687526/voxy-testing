@@ -27,26 +27,7 @@ function ClassicSearchPage()
     }, []);
 
     return (
-        <FusePageSimple
-            header={
-                <div className="flex flex-1 items-center p-16 sm:p-24 max-w-md">
-                    <ThemeProvider theme={theme}>
-                        <Paper className={"flex items-center h-44 w-full"} elevation={1}>
-                            <Input
-                                placeholder="Search..."
-                                className="pl-16"
-                                disableUnderline
-                                fullWidth
-                                inputProps={{
-                                    'aria-label': 'Search'
-                                }}
-                            />
-                            <Icon color="action" className="mr-16">search</Icon>
-                        </Paper>
-                    </ThemeProvider>
-                </div>
-            }
-            content={
+            
                 <div className="p-16 pt-0 sm:p-24 sm:pt-0 max-w-md">
 
                     <FuseAnimate delay={200}>
@@ -82,8 +63,8 @@ function ClassicSearchPage()
                         </div>
                     </div>
                 </div>
-            }
-        />
+            
+        
     );
 }
 

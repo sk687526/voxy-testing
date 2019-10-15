@@ -20,6 +20,7 @@ import {PricingStyle3PageConfig} from './pricing/style-3/PricingStyle3PageConfig
 import {ProfilePageConfig} from './profile/ProfilePageConfig';
 import {ClassicSearchPageConfig} from './search/classic/ClassicSearchPageConfig';
 import {ModernSearchPageConfig} from './search/modern/ModernSearchPageConfig';
+import {SearchResultsConfig} from './search/tabs/SearchResultsConfig';
 import {FaqPageConfig} from './faq/FaqPageConfig';
 import {KnowledgeBasePageConfig} from './knowledge-base/KnowledgeBaseConfig';
 
@@ -47,5 +48,6 @@ export const pagesConfigs = [
     ClassicSearchPageConfig,
     ModernSearchPageConfig,
     FaqPageConfig,
-    KnowledgeBasePageConfig
+    KnowledgeBasePageConfig,
+    SearchResultsConfig
 ];

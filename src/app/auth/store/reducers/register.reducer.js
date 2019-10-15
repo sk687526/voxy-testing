@@ -2,10 +2,7 @@ import * as Actions from '../actions';
 
 const initialState = {
     success: false,
-    error  : {
-        username: null,
-        password: null
-    }
+    error  : null
 };
 
 const register = function (state = initialState, action) {
@@ -21,8 +18,8 @@ const register = function (state = initialState, action) {
         case Actions.REGISTER_ERROR:
         {
             return {
-                success: false,
-                error  : action.payload
+                ...initialState,
+                error: action.payload
             };
         }
         default:

@@ -1,5 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
+import PropTypes from 'prop-types';
 import {Button, InputAdornment, Icon, Card, CardContent, Checkbox, FormControl, FormControlLabel, TextField, Typography} from '@material-ui/core';
+import ErrorIcon from '@material-ui/icons/Error';
+import CloseIcon from '@material-ui/icons/Close';
+import { amber, green } from '@material-ui/core/colors';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 import {darken} from '@material-ui/core/styles/colorManipulator';
 import {makeStyles} from '@material-ui/styles';
 import {FuseAnimate} from '@fuse';
@@ -9,7 +16,11 @@ import {Link} from 'react-router-dom';
 import Formsy from 'formsy-react';
 import {TextFieldFormsy} from '@fuse';
 import * as authActions from 'app/auth/store/actions';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector, connect} from 'react-redux';
+
+const variantIcon = {
+    error: ErrorIcon
+  };
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,7 +29,17 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Register2Page()
+const useStyles1 = makeStyles(theme => ({
+    error: {
+      backgroundColor: theme.palette.error.dark,
+    }
+  }));
+
+  const delay = (ms) => new Promise(resolve =>
+    setTimeout(resolve, ms)
+  );
+
+function Register2Page({error})
 {
     const dispatch = useDispatch();
     const register = useSelector(({auth}) => auth.register);
@@ -36,6 +57,38 @@ function Register2Page()
         }
     }, [register.error]);
 
+    function MySnackbarContentWrapper(props) {
+        const classes = useStyles1();
+        const { className, message, onClose, variant, ...other } = props;
+        const Icon = variantIcon[variant];
+      
+        return (
+          <SnackbarContent
+            className={clsx(classes[variant], className)}
+            aria-describedby="client-snackbar"
+            message={
+              <span id="client-snackbar" className={classes.message}>
+                <Icon className={clsx(classes.icon, classes.iconVariant)} />
+                {message}
+              </span>
+            }
+            action={[
+              <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
+                <CloseIcon className={classes.icon} />
+              </IconButton>,
+            ]}
+            {...other}
+          />
+        );
+      }
+
+      MySnackbarContentWrapper.propTypes = {
+        className: PropTypes.string,
+        message: PropTypes.string,
+        onClose: PropTypes.func,
+        variant: PropTypes.oneOf(['error', 'info', 'success', 'warning']).isRequired,
+      };
+
     function disableButton()
     {
         setIsFormValid(false);
@@ -49,6 +102,12 @@ function Register2Page()
     function handleSubmit(model)
     {
         dispatch(authActions.submitRegisterWithVoxy(model));
+        delay(2000).then(()=>{
+            if(error != undefined && error != null){
+            setOpen(true);
+            }
+        }
+        );
     }
 
     const classes = useStyles();
@@ -60,6 +119,25 @@ function Register2Page()
         passwordConfirm      : '',
         acceptTermsConditions: false
     });
+
+    const [open, setOpen] = useState(error ? true : false);
+
+    function handleClose(event, reason) {
+    
+        if (reason === 'clickaway') {
+            dispatch({
+                type   : 'REGISTER_ERROR',
+                payload: null
+            });
+          return;
+        }
+    
+        setOpen(false);
+        dispatch({
+            type   : 'REGISTER_ERROR',
+            payload: null
+        });
+      }
 
    /* function isFormValid()
     {
@@ -78,6 +156,9 @@ function Register2Page()
         resetForm();
     }*/
 
+    console.log(open);
+    console.log(error);
+
     return (
         <div className={clsx(classes.root, "flex flex-col flex-auto flex-shrink-0 p-24 md:flex-row md:p-0")}>
 
@@ -90,7 +171,7 @@ function Register2Page()
 
                 <FuseAnimate animation="transition.slideUpIn" delay={300}>
                     <Typography variant="h3" color="inherit" className="font-light">
-                        Welcome to the FUSE!
+                        Welcome to the VOXY!
                     </Typography>
                 </FuseAnimate>
 
@@ -107,7 +188,21 @@ function Register2Page()
                 <Card className="w-full max-w-400 mx-auto m-16 md:m-0" square>
 
                     <CardContent className="flex flex-col items-center justify-center p-32 md:p-48 md:pt-128 ">
-
+                    <Snackbar
+                                anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                                }}
+                                open={open}
+                                autoHideDuration={3000}
+                                onClose={handleClose}
+                            >
+                                <MySnackbarContentWrapper
+                                onClose={handleClose}
+                                variant="error"
+                                message={error}
+                                />
+                            </Snackbar>
                         <Typography variant="h6" className="md:w-full mb-32">CREATE AN ACCOUNT</Typography>
 
                         <Formsy
@@ -119,6 +214,27 @@ function Register2Page()
                             noValidate
                             className="flex flex-col justify-center w-full"
                         >
+
+                            <TextFieldFormsy
+                                className="mb-16"
+                                type="text"
+                                name="username"
+                                label="username"
+                                validations="isAlphanumeric"
+                                validationErrors={{
+                                    isAlphanumeric: 'username should not contain any special character'
+                                }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">person</Icon></InputAdornment>
+                                }}
+                                autoFocus
+                                type="name"
+                                value={form.name}
+                                onChange={handleChange}
+                                variant="outlined"
+                                required
+                                fullWidth
+                            />
 
                             <TextFieldFormsy
                                 className="mb-16"
@@ -241,4 +357,11 @@ function Register2Page()
     );
 }
 
-export default Register2Page;
+const mapStateToProps = state => {
+    console.log(state.auth.register);
+    return {
+        error: state.auth.register.error
+    };
+};
+
+export default connect(mapStateToProps)(Register2Page);

@@ -2,6 +2,7 @@ import React from 'react';
 import {AppBar, Hidden, Toolbar} from '@material-ui/core';
 import {makeStyles, ThemeProvider} from '@material-ui/styles';
 import {FuseSearch} from '@fuse';
+import ClassicSearchPage from 'app/main/pages/search/classic/ClassicSearchPage';
 import clsx from 'clsx';
 import NavbarMobileToggleButton from 'app/fuse-layouts/shared-components/NavbarMobileToggleButton';
 import QuickPanelToggleButton from 'app/fuse-layouts/shared-components/quickPanel/QuickPanelToggleButton';
@@ -20,19 +21,27 @@ const useStyles = makeStyles(theme => ({
 
 function ToolbarLayout3(props)
 {
+   // const [flag, setFlag] = useState(false);
     const config = useSelector(({fuse}) => fuse.settings.current.layout.config);
     const toolbarTheme = useSelector(({fuse}) => fuse.settings.toolbarTheme);
 
     const classes = useStyles(props);
+    function handleSubmit(event){
+         if(event.key == 'Enter'){
+        console.log(event.target.value);
+        window.location.href="/pages/search/result";
+    }
+    }
 
     return (
         <ThemeProvider theme={toolbarTheme}>
             <AppBar id="fuse-toolbar" className="flex relative z-10" color="default">
-                <Toolbar className="container p-0 lg:px-24">
+                <Toolbar className="container p-0 lg:px-24" >
 
+                
                     {config.navbar.display && (
                         <Hidden lgUp>
-                            <NavbarMobileToggleButton className="w-64 h-64 p-0"/>
+                            <NavbarMobileToggleButton  className="w-64 h-64 p-0"/>
                             <div className={classes.separator}/>
                         </Hidden>
                     )}
@@ -43,20 +52,20 @@ function ToolbarLayout3(props)
                         </div>
                     </Hidden>
 
-                    <div className="flex flex-1">
+                   <div className="flex flex-1">
                         <Hidden xsDown>
-                            <FuseSearch className="mx-16 lg:mx-24" variant="basic"/>
+                             <FuseSearch onKeyDown={(event)=>handleSubmit(event)} style={{paddingRight: '30px'}}  className="mx-16 lg:mx-24" variant="basic"/>
                         </Hidden>
                     </div>
 
                     <div className="flex">
 
                         <Hidden smUp>
-                            <FuseSearch/>
+                            <FuseSearch onKeyDown={()=>handleSubmit()}/>
                             <div className={classes.separator}/>
                         </Hidden>
 
-                        <UserMenu/>
+                       <UserMenu/>
 
                         <Hidden lgUp>
 

@@ -29,6 +29,7 @@ export function submitLogin({email, password})
 
 export function submitLoginWithVoxy({email, password})
 {
+    
     console.log(email);
     console.log(password);
     var status;
@@ -59,10 +60,10 @@ export function submitLoginWithVoxy({email, password})
                 else{   
                response.json()
             .then((user) => {
-                console.log(user.user);
+                console.log(user.obj.data);
                 if(status != 400){
-                console.log("user" + user);
-                    dispatch(setVoxyUser(user.user));
+                console.log("user" + user.obj.data);
+                    dispatch(setVoxyUser(user.obj.data));
 
                     return dispatch({
                         type: LOGIN_SUCCESS

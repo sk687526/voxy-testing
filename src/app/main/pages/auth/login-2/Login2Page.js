@@ -1,5 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
+import PropTypes from 'prop-types';
 import {Button, Card, InputAdornment, Icon, CardContent, Checkbox, Divider, FormControl, FormControlLabel, TextField, Typography} from '@material-ui/core';
+import ErrorIcon from '@material-ui/icons/Error';
+import CloseIcon from '@material-ui/icons/Close';
+import { amber, green } from '@material-ui/core/colors';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 import {makeStyles} from '@material-ui/styles';
 import {darken} from '@material-ui/core/styles/colorManipulator';
 import {FuseAnimate} from '@fuse';
@@ -9,7 +16,12 @@ import clsx from 'clsx';
 import {TextFieldFormsy} from '@fuse';
 import Formsy from 'formsy-react';
 import * as authActions from 'app/auth/store/actions';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector, connect} from 'react-redux';
+
+const variantIcon = {
+    error: ErrorIcon
+  };
+  
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,8 +30,77 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Login2Page()
+const useStyles1 = makeStyles(theme => ({
+    error: {
+      backgroundColor: theme.palette.error.dark,
+    }
+  }));
+
+  const delay = (ms) => new Promise(resolve =>
+    setTimeout(resolve, ms)
+  );
+
+
+const useEmailWithLocalStorage = localStorageKey => {
+  const [email, setEmail] = React.useState(
+    localStorage.getItem(localStorageKey) || ''
+  );
+  React.useEffect(() => {
+    localStorage.setItem(localStorageKey, email);
+  }, [email]);
+  return [email, setEmail];
+};
+
+const usePasswordWithLocalStorage = localStorageKey => {
+  const [password, setPassword] = React.useState(
+    localStorage.getItem(localStorageKey) || ''
+  );
+  React.useEffect(() => {
+    localStorage.setItem(localStorageKey, password);
+  }, [password]);
+  return [password, setPassword];
+};
+
+const useFlagWithLocalStorage = localStorageKey => {
+  const [flag, setFlag] = React.useState(
+    localStorage.getItem(localStorageKey) || ''
+  );
+  React.useEffect(() => {
+    localStorage.setItem(localStorageKey, flag);
+  }, [flag]);
+  return [flag, setFlag];
+};
+
+const useTimeWithLocalStorage = localStorageKey => {
+  const [time, setTime] = React.useState(
+    localStorage.getItem(localStorageKey) || ''
+  );
+  React.useEffect(() => {
+    localStorage.setItem(localStorageKey, time);
+  }, [time]);
+  return [time, setTime];
+};
+
+
+function Login2Page({error})
 {
+    const [email, setEmail] = useEmailWithLocalStorage(
+    'myEmailInLocalStorage'
+  );
+  const onEmailChange = event => setEmail(event.target.value);
+
+  const [password, setPassword] = usePasswordWithLocalStorage(
+    'myPasswordInLocalStorage'
+  );
+  const onPasswordChange = event => setPassword(event.target.value);
+
+  const [flag, setFlag] = useFlagWithLocalStorage(
+    'myFlagInLocalStorage'
+  );
+
+  const [time, setTime] = useTimeWithLocalStorage(
+    'myTimeInLocalStorage'
+  );
 
     const dispatch = useDispatch();
     const login = useSelector(({auth}) => auth.login);
@@ -37,6 +118,58 @@ function Login2Page()
         }
     }, [login.error]);
 
+    console.log(localStorage.getItem('myFlagInLocalStorage'));
+    var d=new Date('Sat Oct 12 2019 00:13:49 GMT+0530');
+    console.log(email);
+    console.log(password);
+    console.log(localStorage.getItem('myTimeInLocalStorage'));
+    
+  if(email != '' && password != '' && localStorage.getItem('myFlagInLocalStorage') != ''){
+   //if(new Date() - localStorage.getItem('myTimeInLocalStorage') <= 3.6e+6){
+    var model = {
+        email: email,
+        password: password
+    }
+    console.log(model);
+    handleSubmit(model);
+   /* }
+    else{
+        localStorage.clear();
+    }*/
+  }
+
+    function MySnackbarContentWrapper(props) {
+        const classes = useStyles1();
+        const { className, message, onClose, variant, ...other } = props;
+        const Icon = variantIcon[variant];
+      
+        return (
+          <SnackbarContent
+            className={clsx(classes[variant], className)}
+            aria-describedby="client-snackbar"
+            message={
+              <span id="client-snackbar" className={classes.message}>
+                <Icon className={clsx(classes.icon, classes.iconVariant)} />
+                {message}
+              </span>
+            }
+            action={[
+              <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
+                <CloseIcon className={classes.icon} />
+              </IconButton>,
+            ]}
+            {...other}
+          />
+        );
+      }
+
+      MySnackbarContentWrapper.propTypes = {
+        className: PropTypes.string,
+        message: PropTypes.string,
+        onClose: PropTypes.func,
+        variant: PropTypes.oneOf(['error', 'info', 'success', 'warning']).isRequired,
+      };
+
     function disableButton()
     {
         setIsFormValid(false);
@@ -49,8 +182,18 @@ function Login2Page()
 
     function handleSubmit(model)
     {
+        localStorage.setItem('myFlagInLocalStorage', true);
+       // localStorage.setItem('myTimeInLocalStorage', new Date());
         console.log(model);
         dispatch(authActions.submitLoginWithVoxy(model));
+        delay(2000).then(()=>{
+            console.log(error);
+            if(error){
+            setOpen(true);
+            }
+        }
+        );
+        
     }
 
 
@@ -61,6 +204,25 @@ function Login2Page()
         password: '',
         remember: true
     });
+
+    const [open, setOpen] = useState(error ? true : false);
+
+  function handleClose(event, reason) {
+    
+    if (reason === 'clickaway') {
+        dispatch({
+            type   : 'LOGIN_ERROR',
+            payload: null
+        });
+      return;
+    }
+
+    setOpen(false);
+    dispatch({
+        type   : 'LOGIN_ERROR',
+        payload: null
+    });
+  }
 
    /* function isFormValid()
     {
@@ -75,7 +237,9 @@ function Login2Page()
         ev.preventDefault();
         resetForm();
     }*/
-
+    
+    console.log(open);
+    console.log(error);
     return (
         <div className={clsx(classes.root, "flex flex-col flex-auto flex-shrink-0 p-24 md:flex-row md:p-0")}>
 
@@ -87,7 +251,7 @@ function Login2Page()
 
                 <FuseAnimate animation="transition.slideUpIn" delay={300}>
                     <Typography variant="h3" color="inherit" className="font-light">
-                        Welcome to the FUSE!
+                        Welcome to the VOXY!
                     </Typography>
                 </FuseAnimate>
 
@@ -104,6 +268,23 @@ function Login2Page()
                 <Card className="w-full max-w-400 mx-auto m-16 md:m-0" square>
 
                     <CardContent className="flex flex-col items-center justify-center p-32 md:p-48 md:pt-128 ">
+
+                            <Snackbar
+                                anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                                }}
+                                open={open}
+                                autoHideDuration={3000}
+                                onClose={handleClose}
+                            >
+                                <MySnackbarContentWrapper
+                                onClose={handleClose}
+                                variant="error"
+                                message={error}
+                                />
+                            </Snackbar>
+                           
 
                         <Typography variant="h6" className="md:w-full mb-32">LOGIN TO YOUR ACCOUNT</Typography>
 
@@ -132,6 +313,7 @@ function Login2Page()
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">email</Icon></InputAdornment>
                                 }}
+                                onChange={onEmailChange}
                                 variant="outlined"
                                 required
                             />
@@ -151,6 +333,7 @@ function Login2Page()
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">vpn_key</Icon></InputAdornment>
                                 }}
+                                onChange={onPasswordChange}
                                 variant="outlined"
                                 required
                             />
@@ -216,4 +399,11 @@ function Login2Page()
     );
 }
 
-export default Login2Page;
+const mapStateToProps = state => {
+    return {
+        error: state.auth.login.error
+    };
+};
+
+
+export default connect(mapStateToProps)(Login2Page);

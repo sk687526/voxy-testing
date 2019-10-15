@@ -1,6 +1,8 @@
 import React from 'react';
 
+var username = "abcd";
 export const ProfilePageConfig = {
+
     settings: {
         layout: {
             config: {}

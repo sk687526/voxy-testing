@@ -66,9 +66,16 @@ export function submitRegisterWithVoxy({displayName, password, passwordConfirm, 
 
             response.json()
             .then((user) => {
-                console.log(user);
+                console.log(user.error);
                 if(user.info == "250 Great success"){
                    window.location.href = 'http://localhost:3000/pages/auth/mail-confirm';
+                }
+                else{
+                    console.log(user.error); 
+                    return dispatch({
+                    type   : REGISTER_ERROR,
+                    payload: user.error
+                    });
                 }
 
             }

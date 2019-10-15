@@ -118,10 +118,10 @@ export function setVoxyUser(user)
         /**
          * Merge with current Settings
          */
-         console.log(user._id);
+        // console.log(user);
         const authUser = _.merge({}, user,
             {
-                uid : user._id,
+                //uid : user._id,
                 from: 'mongoDB',
                 role: ["staff"],
                 data: user,
@@ -138,7 +138,7 @@ export function setVoxyUser(user)
         Set User Data
          */
          console.log(authUser);
-        dispatch({
+       return dispatch({
             type   : SET_USER_DATA,
             payload: authUser
         })

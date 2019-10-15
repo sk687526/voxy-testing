@@ -2,10 +2,7 @@ import * as Actions from '../actions';
 
 const initialState = {
     success: false,
-    error  : {
-        username: null,
-        password: null
-    }
+    error  : null
 };
 
 const login = function (state = initialState, action) {
