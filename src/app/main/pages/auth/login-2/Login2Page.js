@@ -17,6 +17,10 @@ import {TextFieldFormsy} from '@fuse';
 import Formsy from 'formsy-react';
 import * as authActions from 'app/auth/store/actions';
 import {useDispatch, useSelector, connect} from 'react-redux';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+
+
 
 const variantIcon = {
     error: ErrorIcon
@@ -41,7 +45,7 @@ const useStyles1 = makeStyles(theme => ({
   );
 
 
-const useEmailWithLocalStorage = localStorageKey => {
+/*const useEmailWithLocalStorage = localStorageKey => {
   const [email, setEmail] = React.useState(
     localStorage.getItem(localStorageKey) || ''
   );
@@ -79,12 +83,12 @@ const useTimeWithLocalStorage = localStorageKey => {
     localStorage.setItem(localStorageKey, time);
   }, [time]);
   return [time, setTime];
-};
+};*/
 
 
 function Login2Page({error})
 {
-    const [email, setEmail] = useEmailWithLocalStorage(
+    /*const [email, setEmail] = useEmailWithLocalStorage(
     'myEmailInLocalStorage'
   );
   const onEmailChange = event => setEmail(event.target.value);
@@ -100,7 +104,9 @@ function Login2Page({error})
 
   const [time, setTime] = useTimeWithLocalStorage(
     'myTimeInLocalStorage'
-  );
+  );*/
+  
+  //const onEmailChange = event => setCookie('email', event.target.value, { path: '/' });
 
     const dispatch = useDispatch();
     const login = useSelector(({auth}) => auth.login);
@@ -118,25 +124,32 @@ function Login2Page({error})
         }
     }, [login.error]);
 
-    console.log(localStorage.getItem('myFlagInLocalStorage'));
+    console.log(cookies.get('isLoggedIn'));
+    if(cookies.get('isLoggedIn') == 'true'){
+        console.log(cookies.get('user'));
+       dispatch(authActions.setVoxyUser(cookies.get('user')));
+       dispatch({
+                        type: 'LOGIN_SUCCESS'
+                    });
+    }
+
+
+    /*console.log(localStorage.getItem('myFlagInLocalStorage'));
     var d=new Date('Sat Oct 12 2019 00:13:49 GMT+0530');
     console.log(email);
     console.log(password);
     console.log(localStorage.getItem('myTimeInLocalStorage'));
     
   if(email != '' && password != '' && localStorage.getItem('myFlagInLocalStorage') != ''){
-   //if(new Date() - localStorage.getItem('myTimeInLocalStorage') <= 3.6e+6){
+   
     var model = {
         email: email,
         password: password
     }
     console.log(model);
     handleSubmit(model);
-   /* }
-    else{
-        localStorage.clear();
-    }*/
-  }
+   
+  }*/
 
     function MySnackbarContentWrapper(props) {
         const classes = useStyles1();
@@ -313,7 +326,7 @@ function Login2Page({error})
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">email</Icon></InputAdornment>
                                 }}
-                                onChange={onEmailChange}
+                                //onChange={onEmailChange}
                                 variant="outlined"
                                 required
                             />
@@ -333,7 +346,7 @@ function Login2Page({error})
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">vpn_key</Icon></InputAdornment>
                                 }}
-                                onChange={onPasswordChange}
+                               // onChange={onPasswordChange}
                                 variant="outlined"
                                 required
                             />

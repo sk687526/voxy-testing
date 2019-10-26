@@ -15,11 +15,23 @@ import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions'
 import * as authActions from 'app/auth/store/actions';
 import reducer from './store/reducers';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 function AnalyticsDashboardApp()
 {
     const dispatch = useDispatch();
     const widgets = useSelector(({analyticsDashboardApp}) => analyticsDashboardApp.widgets.data);
+
+    
+    console.log(cookies.get('user'));
+    console.log(cookies.getAll());
+    if(cookies.get('isLoggedIn') == 'true'){ 
+        dispatch(authActions.setVoxyUser(cookies.get('user')));
+        dispatch({
+                        type: 'LOGIN_SUCCESS'
+                    });
+    }
 
     useEffect(() => {
         dispatch(Actions.getWidgets());

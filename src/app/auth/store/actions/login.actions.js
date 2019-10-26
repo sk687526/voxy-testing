@@ -2,6 +2,7 @@ import firebaseService from 'app/services/firebaseService';
 import jwtService from 'app/services/jwtService';
 import {setUserData, setVoxyUser} from './user.actions';
 import * as Actions from 'app/store/actions';
+//import { useCookies } from 'react-cookie';
 
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -27,6 +28,7 @@ export function submitLogin({email, password})
             });
 }
 
+//const [cookies, setCookie, removeCookie] = useCookies(['user']);
 export function submitLoginWithVoxy({email, password})
 {
     
@@ -36,14 +38,20 @@ export function submitLoginWithVoxy({email, password})
     return (dispatch) =>
         fetch('http://localhost:3002/users/login', {
               method: "POST",
-              body: JSON.stringify({
-                email: email,
-                password: password
-              }),
               headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-              }
+              },
+             // mode: 'same-origin',
+                //redirect: 'follow',
+                credentials: 'include',
+               // withCredentials: true,
+
+              body: JSON.stringify({
+                email: email,
+                password: password
+              })
+              
           })
             .then((response) => {
                 status = response.status;
@@ -57,11 +65,15 @@ export function submitLoginWithVoxy({email, password})
                     payload: error.error
                     });
                 })
-                else{   
+                else{ 
+                
                response.json()
-            .then((user) => {
+            .then((user) => { 
                 console.log(user.obj.data);
                 if(status != 400){
+                    console.log(user);
+                    //setCookie('user', userCookie, { path: '/' })
+                    //cookies.get('accessToken');
                 console.log("user" + user.obj.data);
                     dispatch(setVoxyUser(user.obj.data));
 

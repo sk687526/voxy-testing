@@ -3,7 +3,8 @@ import {Avatar, Button, Icon, ListItemIcon, ListItemText, Popover, MenuItem, Typ
 import {useSelector, useDispatch} from 'react-redux';
 import * as authActions from 'app/auth/store/actions';
 import {Link} from 'react-router-dom';
-import faker from 'faker';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 function UserMenu(props)
 {
@@ -97,10 +98,7 @@ function UserMenu(props)
                         </MenuItem>
                         <MenuItem
                             onClick={() => {
-                                localStorage.setItem('myEmailInLocalStorage', '');
-                                localStorage.setItem('myPasswordInLocalStorage', '');
-                                localStorage.setItem('myFlagInLocalStorage', '');
-                                localStorage.setItem('myTimeInLocalStorage', '');
+                               cookies.set('isLoggedIn', 'false');
                                 dispatch(authActions.logoutUser());
                                 userMenuClose();
 

@@ -11,6 +11,10 @@ import AppContext from './AppContext';
 import routes from './fuse-configs/routesConfig';
 import {create} from 'jss';
 import {StylesProvider, jssPreset, createGenerateClassName} from '@material-ui/styles';
+//import Cookies from 'js-cookie';
+import Cookies from 'universal-cookie';
+import {setVoxyUser} from 'app/auth/store/actions/user.actions';
+const cookies = new Cookies();
 
 const jss = create({
     ...jssPreset(),
@@ -19,7 +23,10 @@ const jss = create({
 });
 
 const generateClassName = createGenerateClassName();
+//console.log(store.getState().auth.user.data);
+//console.log(cookies.get('user'));
 
+//store.dispatch(setVoxyUser(cookies.get('user')));
 const App = () => {
     return (
         <AppContext.Provider

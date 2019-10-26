@@ -5,8 +5,10 @@ import {FusePageSimple, FuseAnimate} from '@fuse';
 import TimelineTab from './tabs/TimelineTab';
 import PhotosVideosTab from './tabs/PhotosVideosTab';
 import AboutTab from './tabs/about/AboutTab';
-import {connect} from 'react-redux';
-import faker from 'faker';
+import {connect, useDispatch} from 'react-redux';
+import * as authActions from 'app/auth/store/actions';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 const useStyles = makeStyles(theme => ({
     layoutHeader: {
@@ -21,8 +23,18 @@ const useStyles = makeStyles(theme => ({
 
 function ProfilePage({displayName})
 {
+     const dispatch = useDispatch();
     const classes = useStyles();
     const [selectedTab, setSelectedTab] = useState(0);
+
+    if(cookies.get('isLoggedIn') == 'true'){
+        console.log(cookies.get('user'));
+       dispatch(authActions.setVoxyUser(cookies.get('user')));
+       dispatch({
+                        type: 'LOGIN_SUCCESS'
+                    });
+    }
+
 
     function handleTabChange(event, value)
     {

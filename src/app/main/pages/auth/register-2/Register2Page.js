@@ -17,6 +17,8 @@ import Formsy from 'formsy-react';
 import {TextFieldFormsy} from '@fuse';
 import * as authActions from 'app/auth/store/actions';
 import {useDispatch, useSelector, connect} from 'react-redux';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 const variantIcon = {
     error: ErrorIcon
@@ -56,6 +58,15 @@ function Register2Page({error})
             disableButton();
         }
     }, [register.error]);
+
+    if(cookies.get('isLoggedIn') == 'true'){
+        console.log(cookies.get('user'));
+       dispatch(authActions.setVoxyUser(cookies.get('user')));
+       dispatch({
+                        type: 'LOGIN_SUCCESS'
+                    });
+    }
+
 
     function MySnackbarContentWrapper(props) {
         const classes = useStyles1();
