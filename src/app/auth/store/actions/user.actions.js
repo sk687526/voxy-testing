@@ -138,6 +138,7 @@ export function setVoxyUser(user)
         Set User Data
          */
          console.log(authUser);
+         window.localStorage.setItem('user', JSON.stringify(authUser));
        return dispatch({
             type   : SET_USER_DATA,
             payload: authUser
@@ -242,7 +243,7 @@ export function logoutUser()
         }
 
         history.push({
-            pathname: '/'
+            pathname: '/login'
         });
 
         switch ( user.from )

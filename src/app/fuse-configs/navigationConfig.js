@@ -179,7 +179,7 @@ const navigationConfig = [
                         'id'   : 'login-v2',
                         'title': 'Login v2',
                         'type' : 'item',
-                        'url'  : '/pages/auth/login-2'
+                        'url'  : '/login'
                     },
                     {
                         'id'   : 'authentication-register',
@@ -191,7 +191,7 @@ const navigationConfig = [
                         'id'   : 'authentication-register-v2',
                         'title': 'Register v2',
                         'type' : 'item',
-                        'url'  : '/pages/auth/register-2'
+                        'url'  : '/register'
                     },
                     {
                         'id'   : 'authentication-forgot-password',
@@ -836,7 +836,7 @@ const navigationConfig = [
                 'id'   : 'login',
                 'title': 'Login',
                 'type' : 'item',
-                'url'  : '/login',
+                'url'  : '/login/m',
                 auth   : authRoles.onlyGuest,
                 'icon' : 'lock'
             },
@@ -844,7 +844,7 @@ const navigationConfig = [
                 'id'   : 'register',
                 'title': 'Register',
                 'type' : 'item',
-                'url'  : '/register',
+                'url'  : '/register/m',
                 auth   : authRoles.onlyGuest,
                 'icon' : 'person_add'
             },

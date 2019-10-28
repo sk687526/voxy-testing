@@ -9,8 +9,10 @@ const cookies = new Cookies();
 function UserMenu(props)
 {
     const dispatch = useDispatch();
+
+
     
-    const user = useSelector(({auth}) => auth.user);
+    const user = useSelector(({auth}) => JSON.parse(window.localStorage.getItem('user')) || auth.user);
 
     const [userMenu, setUserMenu] = useState(null);
     
@@ -98,7 +100,8 @@ function UserMenu(props)
                         </MenuItem>
                         <MenuItem
                             onClick={() => {
-                               cookies.set('isLoggedIn', 'false');
+                               cookies.remove('isLoggedIn', { path: '/' });
+                                window.localStorage.clear();
                                 dispatch(authActions.logoutUser());
                                 userMenuClose();
 

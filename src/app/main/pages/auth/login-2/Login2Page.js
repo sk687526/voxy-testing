@@ -17,6 +17,7 @@ import {TextFieldFormsy} from '@fuse';
 import Formsy from 'formsy-react';
 import * as authActions from 'app/auth/store/actions';
 import {useDispatch, useSelector, connect} from 'react-redux';
+import jwt from 'jsonwebtoken';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -122,17 +123,45 @@ function Login2Page({error})
             });
             disableButton();
         }
+        if(cookies.get('isLoggedIn') == 'true'){ 
+        jwt.verify(JSON.parse(window.localStorage.getItem('accessToken')), JSON.parse(window.localStorage.getItem('user')).data.email, function(err, decoded) {
+          // err
+          // decoded undefined
+          if(err){
+            console.log(err);
+                                cookies.remove('isLoggedIn', { path: '/' });
+                                window.localStorage.clear();
+                                console.log(document.cookie);
+                                console.log(window.localStorage);
+                                //dispatch(authActions.logoutUser());
+                               // userMenuClose();
+                               window.location.href = './login';
+          }
+          else{
+            console.log(decoded);
+            var dateNow = new Date();
+
+            if(decoded.exp > dateNow.getTime()){
+                                cookies.remove('isLoggedIn', { path: '/' });
+                                window.localStorage.clear();
+                                console.log(document.cookie);
+                                console.log(window.localStorage);
+                               // dispatch(authActions.logoutUser());
+                               // userMenuClose();
+                               window.location.href = './login';
+                }
+                else{
+                    dispatch(authActions.setVoxyUser(JSON.parse(window.localStorage.getItem('user')).data));
+                     dispatch({
+                        type: 'LOGIN_SUCCESS'
+                      });
+                }
+             }
+        });
+    }
     }, [login.error]);
 
-    console.log(cookies.get('isLoggedIn'));
-    if(cookies.get('isLoggedIn') == 'true'){
-        console.log(cookies.get('user'));
-       dispatch(authActions.setVoxyUser(cookies.get('user')));
-       dispatch({
-                        type: 'LOGIN_SUCCESS'
-                    });
-    }
-
+    
 
     /*console.log(localStorage.getItem('myFlagInLocalStorage'));
     var d=new Date('Sat Oct 12 2019 00:13:49 GMT+0530');
@@ -195,7 +224,7 @@ function Login2Page({error})
 
     function handleSubmit(model)
     {
-        localStorage.setItem('myFlagInLocalStorage', true);
+        ///localStorage.setItem('myFlagInLocalStorage', true);
        // localStorage.setItem('myTimeInLocalStorage', new Date());
         console.log(model);
         dispatch(authActions.submitLoginWithVoxy(model));
@@ -316,7 +345,7 @@ function Login2Page({error})
                                 type="text"
                                 name="email"
                                 label="Username/Email"
-                                value="admin"
+                                //value="admin"
                                 validations={{
                                     minLength: 4
                                 }}
@@ -336,7 +365,7 @@ function Login2Page({error})
                                 type="password"
                                 name="password"
                                 label="Password"
-                                value="admin"
+                                //value="admin"
                                 validations={{
                                     minLength: 4
                                 }}

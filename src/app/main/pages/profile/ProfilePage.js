@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Avatar, Button, Tab, Tabs, Typography} from '@material-ui/core';
 import {makeStyles} from '@material-ui/styles';
 import {FusePageSimple, FuseAnimate} from '@fuse';
@@ -7,6 +7,7 @@ import PhotosVideosTab from './tabs/PhotosVideosTab';
 import AboutTab from './tabs/about/AboutTab';
 import {connect, useDispatch} from 'react-redux';
 import * as authActions from 'app/auth/store/actions';
+import jwt from 'jsonwebtoken';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -27,13 +28,46 @@ function ProfilePage({displayName})
     const classes = useStyles();
     const [selectedTab, setSelectedTab] = useState(0);
 
-    if(cookies.get('isLoggedIn') == 'true'){
-        console.log(cookies.get('user'));
-       dispatch(authActions.setVoxyUser(cookies.get('user')));
-       dispatch({
+    useEffect(() => {
+        
+        if(cookies.get('isLoggedIn') == 'true'){ 
+        jwt.verify(JSON.parse(window.localStorage.getItem('accessToken')), JSON.parse(window.localStorage.getItem('user')).data.email, function(err, decoded) {
+          // err
+          // decoded undefined
+          if(err){
+            console.log(err);
+                                cookies.remove('isLoggedIn', { path: '/' });
+                                window.localStorage.clear();
+                                console.log(document.cookie);
+                                console.log(window.localStorage);
+                               // dispatch(authActions.logoutUser());
+                               // userMenuClose();
+                               window.location.href = './login';
+          }
+          else{
+            console.log(decoded);
+            var dateNow = new Date();
+
+            if(decoded.exp > dateNow.getTime()){
+                                cookies.remove('isLoggedIn', { path: '/' });
+                                window.localStorage.clear();
+                                console.log(document.cookie);
+                                console.log(window.localStorage);
+                                // dispatch(authActions.logoutUser());
+                               // userMenuClose();
+                               window.location.href = './login';
+                }
+                else{
+                    dispatch(authActions.setVoxyUser(JSON.parse(window.localStorage.getItem('user')).data));
+                     dispatch({
                         type: 'LOGIN_SUCCESS'
-                    });
+                      });
+                }
+             }
+        });
     }
+
+    }, [dispatch]);
 
 
     function handleTabChange(event, value)

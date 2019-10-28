@@ -74,7 +74,12 @@ export function submitLoginWithVoxy({email, password})
                     console.log(user);
                     //setCookie('user', userCookie, { path: '/' })
                     //cookies.get('accessToken');
-                console.log("user" + user.obj.data);
+                    console.log(user.obj.data);
+                    //var obj1 = user.obj.accessToken;
+                    //var obj2 = user.obj.data;
+                    window.localStorage.setItem('accessToken', JSON.stringify(user.obj.accessToken));
+                    
+                
                     dispatch(setVoxyUser(user.obj.data));
 
                     return dispatch({

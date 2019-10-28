@@ -231,7 +231,12 @@ function Register2Page({error})
                                 type="text"
                                 name="username"
                                 label="username"
-                                validations="isAlphanumeric"
+                               // validations="isAlphanumeric"
+                                validations={{
+                                    minLength: 4,
+                                    maxLength: 12,
+                                    isAlphanumeric: true
+                                }}
                                 validationErrors={{
                                     isAlphanumeric: 'username should not contain any special character'
                                 }}
