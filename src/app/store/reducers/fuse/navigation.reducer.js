@@ -4,6 +4,7 @@ import navigationConfig from 'app/fuse-configs/navigationConfig';
 const initialState = navigationConfig;
 
 const navigation = function (state = initialState, action) {
+    console.log(action);
     switch ( action.type )
     {
         case Actions.GET_NAVIGATION:

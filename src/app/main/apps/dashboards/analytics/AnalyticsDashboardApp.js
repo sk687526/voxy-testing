@@ -23,10 +23,7 @@ function AnalyticsDashboardApp()
 {
     const dispatch = useDispatch();
     const widgets = useSelector(({analyticsDashboardApp}) => analyticsDashboardApp.widgets.data);
-
     
-    //console.log(JSON.parse(window.localStorage.getItem('user')).email);
-    //console.log(cookies.getAll());
 
     useEffect(() => {
         dispatch(Actions.getWidgets());

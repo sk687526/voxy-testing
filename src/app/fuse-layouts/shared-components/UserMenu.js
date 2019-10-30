@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Avatar, Button, Icon, ListItemIcon, ListItemText, Popover, MenuItem, Typography} from '@material-ui/core';
 import {useSelector, useDispatch} from 'react-redux';
 import * as authActions from 'app/auth/store/actions';
+import * as Actions from 'app/store/actions/fuse/index';
 import {Link} from 'react-router-dom';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -13,9 +14,46 @@ function UserMenu(props)
 
     
     const user = useSelector(({auth}) => JSON.parse(window.localStorage.getItem('user')) || auth.user);
-
+    console.log(user);
     const [userMenu, setUserMenu] = useState(null);
+    const [profileUrl, setProfileUrl] = useState("pages/profile/" + user.data.username);
     
+     useEffect(() => {
+        console.log(profileUrl);
+
+        //updating the profile navigation
+        const profile = {
+                'id'   : 'profile',
+                'title': 'Profile',
+                'type' : 'item',
+                'icon' : 'person',
+                'url'  : `${profileUrl}`
+            }
+        dispatch(Actions.updateNavigationItem('profile', profile));
+        //updating profile navigation
+
+
+
+        //updating the profile page config file
+        const ProfilePageConfig = {
+
+            settings: {
+                layout: {
+                    config: {}
+                }
+            },
+            routes  : [
+                {
+                    path     : `${profileUrl}`,
+                    component: React.lazy(() => import('app/main/pages/profile/ProfilePage'))
+                }
+            ]
+        };
+        //dispatch(Actions.updateRouteItem(ProfilePageConfig));
+        //updating the profile page config file
+        
+    }, [dispatch]);
+
     const userMenuClick = event => {
         setUserMenu(event.currentTarget);
     };
@@ -86,7 +124,8 @@ function UserMenu(props)
                     </React.Fragment>
                 ) : (
                     <React.Fragment>
-                        <MenuItem component={Link} to="/pages/profile" onClick={userMenuClose}>
+                      
+                        <MenuItem component={Link} to={profileUrl} onClick={userMenuClose}>
                             <ListItemIcon className="min-w-40">
                                 <Icon>account_circle</Icon>
                             </ListItemIcon>
@@ -104,7 +143,7 @@ function UserMenu(props)
                                 window.localStorage.clear();
                                 dispatch(authActions.logoutUser());
                                 userMenuClose();
-
+                                window.location.href = './login';
                             }}
                         >
                             <ListItemIcon className="min-w-40">

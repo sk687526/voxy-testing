@@ -1,9 +1,9 @@
 import {FuseUtils} from '@fuse';
 import routesConfig from 'app/fuse-configs/routesConfig';
 
-export const GET_ROUTES = 'GET_ROUTES';
-export const SET_ROUTES = 'SET_ROUTES';
-export const RESET_ROUTES = 'RESET_ROUTES';
+export const GET_ROUTES = '[ROUTES] GET ROUTES';
+export const SET_ROUTES = '[ROUTES] SET ROUTES';
+export const RESET_ROUTES = '[ROUTES] RESET ROUTES';
 
 export function getRoutes()
 {
@@ -20,7 +20,7 @@ export function updateRouteItem(config)
         const {routes} = getState().fuse;
         return dispatch({
             type      : SET_ROUTES,
-            route: FuseUtils.setProfileRoute(routes, config)
+            route: FuseUtils.setRoute(routes, config)
         });
     }
 }

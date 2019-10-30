@@ -7,6 +7,7 @@ import PhotosVideosTab from './tabs/PhotosVideosTab';
 import AboutTab from './tabs/about/AboutTab';
 import {connect, useDispatch} from 'react-redux';
 import * as authActions from 'app/auth/store/actions';
+import * as Actions from 'app/store/actions/fuse/index';
 import jwt from 'jsonwebtoken';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -29,7 +30,8 @@ function ProfilePage({displayName})
     const [selectedTab, setSelectedTab] = useState(0);
 
     useEffect(() => {
-        
+        console.log(JSON.parse(window.localStorage.getItem('user')).data.username);
+        dispatch(Actions.updateNavigationItem('profile', `profile/${JSON.parse(window.localStorage.getItem('user')).data.username}`));
         if(cookies.get('isLoggedIn') == 'true'){ 
         jwt.verify(JSON.parse(window.localStorage.getItem('accessToken')), JSON.parse(window.localStorage.getItem('user')).data.email, function(err, decoded) {
           // err
