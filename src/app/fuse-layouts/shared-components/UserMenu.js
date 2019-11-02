@@ -16,7 +16,8 @@ function UserMenu(props)
     const user = useSelector(({auth}) => JSON.parse(window.localStorage.getItem('user')) || auth.user);
     console.log(user);
     const [userMenu, setUserMenu] = useState(null);
-    const [profileUrl, setProfileUrl] = useState("pages/profile/" + user.data.username);
+    const [profileUrl, setProfileUrl] = useState(`pages/profile/${user.data.username}`);
+    console.log(profileUrl);
     
      useEffect(() => {
         console.log(profileUrl);
@@ -29,7 +30,7 @@ function UserMenu(props)
                 'icon' : 'person',
                 'url'  : `${profileUrl}`
             }
-        dispatch(Actions.updateNavigationItem('profile', profile));
+        //dispatch(Actions.updateNavigationItem('profile', profile));
         //updating profile navigation
 
 
@@ -125,7 +126,7 @@ function UserMenu(props)
                 ) : (
                     <React.Fragment>
                       
-                        <MenuItem component={Link} to={profileUrl} onClick={userMenuClose}>
+                        <MenuItem component={Link} to="/pages/profile" onClick={userMenuClose}>
                             <ListItemIcon className="min-w-40">
                                 <Icon>account_circle</Icon>
                             </ListItemIcon>
