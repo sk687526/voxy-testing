@@ -57,6 +57,7 @@ function ToolbarLayout3(props)
                              <FuseSearch onKeyDown={(event)=>handleSubmit(event)} style={{paddingRight: '30px'}}  className="mx-16 lg:mx-24" variant="basic"/>
                         </Hidden>
                     </div>
+                    
 
                     <div className="flex">
 
