@@ -45,7 +45,7 @@ export function submitLoginWithVoxy({email, password})
              // mode: 'same-origin',
                 //redirect: 'follow',
                 credentials: 'include',
-                withCredentials: false,
+                //withCredentials: false,
 
               body: JSON.stringify({
                 email: email,
