@@ -49,7 +49,7 @@ export function redirectRegister(user){
 export function submitRegisterWithVoxy({displayName, password, passwordConfirm, email})
 {
     return (dispatch) =>
-        fetch('http://localhost:3002/users/register', {
+        fetch('https://gentle-taiga-32940.herokuapp.com/users/register', {
               method: "POST",
               body: JSON.stringify({
                 displayName: displayName,
@@ -68,7 +68,7 @@ export function submitRegisterWithVoxy({displayName, password, passwordConfirm, 
             .then((user) => {
                 console.log(user.error);
                 if(user.info == "250 Great success"){
-                   window.location.href = 'http://localhost:3000/pages/auth/mail-confirm';
+                   window.location.href = '/pages/auth/mail-confirm';
                 }
                 else{
                     console.log(user.error); 

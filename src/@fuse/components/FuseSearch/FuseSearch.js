@@ -9,6 +9,8 @@ import parse from 'autosuggest-highlight/parse';
 import {withRouter} from 'react-router-dom';
 import deburr from 'lodash/deburr';
 import Autosuggest from 'react-autosuggest';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 function renderInputComponent(inputProps)
 {
@@ -105,10 +107,15 @@ async function getSuggestions()
    let response, res;
    try{
      return await fetch("http://localhost:3002/users/suggestions",{
-              method: "GET",
+              method: "POST",
               headers: {
+                "Content-Type": "application/json",
                 "Accept": "application/json"
-              }
+              },
+              body: JSON.stringify({
+                accessToken: window.localStorage.getItem('accessToken'),
+                email: cookies.get('email')
+              })
           });
       }
       catch(err){
@@ -324,10 +331,8 @@ function FuseSearch(props)
     {
         event.preventDefault();
         event.stopPropagation();
-        if ( !suggestion.url )
-        {
-            return;
-        }
+        
+        window.location.href ='./pages/search/result';
        hideSearch();
     }
 

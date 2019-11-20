@@ -123,38 +123,107 @@ function Login2Page({error})
             });
             disableButton();
         }
+        var secret;
+        if(window.localStorage.getItem('user')){
+            secret = JSON.parse(window.localStorage.getItem('user')).data.email;
+        }
+        if(cookies.get('email')){
+            secret = cookies.get('email');
+        }
         if(cookies.get('isLoggedIn') == 'true'){ 
-        jwt.verify(JSON.parse(window.localStorage.getItem('accessToken')), JSON.parse(window.localStorage.getItem('user')).data.email, function(err, decoded) {
+        jwt.verify(JSON.parse(window.localStorage.getItem('accessToken')), secret, function(err, decoded) {
           // err
           // decoded undefined
           if(err){
             console.log(err);
+                                //window.location.href = './login';
                                 cookies.remove('isLoggedIn', { path: '/' });
                                 window.localStorage.clear();
                                 console.log(document.cookie);
                                 console.log(window.localStorage);
                                 //dispatch(authActions.logoutUser());
                                // userMenuClose();
-                               window.location.href = './login';
+                               
           }
           else{
             console.log(decoded);
             var dateNow = new Date();
 
             if(decoded.exp > dateNow.getTime()){
+                               // window.location.href = './login';
                                 cookies.remove('isLoggedIn', { path: '/' });
                                 window.localStorage.clear();
                                 console.log(document.cookie);
                                 console.log(window.localStorage);
                                // dispatch(authActions.logoutUser());
                                // userMenuClose();
-                               window.location.href = './login';
                 }
                 else{
+                    if(!window.localStorage.getItem('user')){
+                        fetch("https://gentle-taiga-32940.herokuapp.com/users/user",{
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                              },
+                              body: JSON.stringify({
+                                accessToken: window.localStorage.getItem('accessToken'),
+                                email: cookies.get('email')
+                              })
+                          })
+                        .then(response => {
+                            response.json()
+                            .then(res => {
+                                console.log(res);
+                                if(res.status != 400){
+                                console.log(res);
+                                //setCookie('res', resCookie, { path: '/' })
+                                //cookies.get('accessToken');
+                                console.log(res.obj.data);
+                                //var obj1 = res.obj.accessToken;
+                                //var obj2 = res.obj.data;
+                               // window.localStorage.setItem('accessToken', JSON.stringify(res.obj.accessToken));
+                                
+                            
+                                dispatch(authActions.setVoxyUser(res.obj.data));
+
+                                return dispatch({
+                                    type: 'LOGIN_SUCCESS'
+                                });
+                            }
+                            })
+                            .catch(error => {
+                               console.log(" error " + error);
+                               //window.location.href = './login';
+                                 cookies.remove('isLoggedIn');
+                             cookies.remove('email');
+                             window.localStorage.clear();
+                                return dispatch({
+                                    type   : 'LOGIN_ERROR',
+                                    payload: error
+                                });
+
+                            })
+                        })
+                        .catch(error => {
+                            console.log(" error " + error);
+                            //window.location.href = './login';
+                             cookies.remove('isLoggedIn');
+                             cookies.remove('email');
+                             window.localStorage.clear();
+                            return dispatch({
+                                type   : 'LOGIN_ERROR',
+                                payload: error
+                            });
+                             
+                        })
+                    }
+                    else{
                     dispatch(authActions.setVoxyUser(JSON.parse(window.localStorage.getItem('user')).data));
                      dispatch({
                         type: 'LOGIN_SUCCESS'
                       });
+                 }
                 }
              }
         });

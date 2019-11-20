@@ -36,7 +36,7 @@ export function submitLoginWithVoxy({email, password})
     console.log(password);
     var status;
     return (dispatch) =>
-        fetch('http://localhost:3002/users/login', {
+        fetch('https://gentle-taiga-32940.herokuapp.com/users/login', {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
