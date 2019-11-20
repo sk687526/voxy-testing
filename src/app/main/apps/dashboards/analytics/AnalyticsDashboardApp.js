@@ -78,11 +78,13 @@ function AnalyticsDashboardApp()
           // decoded undefined
           if(err){
             console.log(err);
-                                window.location.href = './login';
-                                cookies.remove('isLoggedIn', { path: '/' });
-                                window.localStorage.clear();
                                 console.log(document.cookie);
                                 console.log(window.localStorage);
+                                 cookies.remove('isLoggedIn', { path: '/' });
+                                window.localStorage.clear();
+                                window.location.href = './login';
+                               
+                                
                                 //dispatch(authActions.logoutUser());
                                // userMenuClose();
                                
