@@ -1,7 +1,7 @@
 [build]
   command = "npm run build"
-  publish="src/build"
-  base = "src"
+  publish="voxy-testing/src"
+  base = "voxy-testing"
 
   [[redirects]]
   from = "/*"
