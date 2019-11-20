@@ -48,13 +48,14 @@ function AnalyticsDashboardApp()
             }
             dispatch(authActions.redirectRegister(user));
         }
+        console.log("yes");
         if(!cookies.get('isLoggedIn') || !window.localStorage.getItem('accessToken')){
             console.log("logout");
                                 console.log(document.cookie);
                                 console.log(window.localStorage);
                                 //dispatch(authActions.logoutUser());
                                // userMenuClose();
-                               window.location.href = './login';
+                               //window.location.href = './login';
                                 window.localStorage.clear();
                                 if(cookies.get('isLoggedIn')){
                                     cookies.remove('isLoggedIn', { path: '/' });
